@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Intouch Neanmongkol — Software Developer</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0e17; --bg2:#0d1220; --panel:#111726; --panel2:#151d30;
+  --line:#232c42; --ink:#e8ecf5; --sub:#8b97b5; --mut:#5c6a8c;
+  --cyan:#5eead4; --violet:#a78bfa; --amber:#fbbf68;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;}
+html{scroll-padding-top:env(safe-area-inset-top,0px);}
+html,body{height:100%;}
+body{
+  margin:0; background:radial-gradient(ellipse 80% 60% at 50% -10%, #17203a 0%, var(--bg) 55%), var(--bg);
+  color:var(--ink); font-family:'Space Grotesk',system-ui,sans-serif; overflow-x:hidden;
+}
+.mono{font-family:'JetBrains Mono',monospace;}
+.wrap{max-width:960px;margin:0 auto;padding:0 24px;}
+
+/* grid backdrop */
+.grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size:56px 56px; opacity:.22; mask-image:radial-gradient(ellipse 70% 50% at 50% 20%, black 20%, transparent 75%);
+}
+
+/* HERO with 3D tilt card */
+.hero{position:relative; z-index:1; padding:76px 24px 40px; perspective:1200px;}
+.card3d{
+  max-width:912px;margin:0 auto; transform-style:preserve-3d;
+  background:linear-gradient(160deg, var(--panel2), var(--panel) 60%);
+  border:1px solid var(--line); border-radius:20px; padding:44px 40px;
+  box-shadow:0 30px 60px -20px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.02) inset;
+  transition:transform .15s ease-out; will-change:transform;
+}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;color:var(--cyan);font-size:13px;letter-spacing:.02em;}
+.eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 10px var(--cyan);}
+.name{font-size:clamp(34px,5vw,52px); font-weight:700; margin:14px 0 6px; line-height:1.05;
+  background:linear-gradient(100deg, var(--ink) 30%, var(--cyan) 65%, var(--violet) 100%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.role{color:var(--sub); font-size:18px; margin:0 0 20px;}
+.tagline{color:var(--mut); max-width:56ch; font-size:15px; line-height:1.7; margin:0 0 26px;}
+.contact-row{display:flex;flex-wrap:wrap;gap:10px;}
+.pill{
+  font-size:13px; padding:8px 14px; border-radius:999px; border:1px solid var(--line);
+  color:var(--sub); background:rgba(255,255,255,.02);
+}
+.pill b{color:var(--ink); font-weight:500;}
+
+/* sections */
+section{position:relative;z-index:1; padding:52px 24px;}
+.section-head{display:flex; align-items:baseline; gap:14px; margin-bottom:28px;}
+.section-head h2{font-size:22px; margin:0; font-weight:600;}
+.section-head .idx{font-family:'JetBrains Mono',monospace; color:var(--mut); font-size:13px;}
+.section-head .rule{flex:1; height:1px; background:linear-gradient(90deg,var(--line),transparent);}
+
+/* skills — tilting chips in 3D layers */
+.skills-stage{perspective:1000px;}
+.skill-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:14px; transform-style:preserve-3d;}
+.skill{
+  padding:16px; border-radius:14px; background:var(--panel);
+  border:1px solid var(--line); transform-style:preserve-3d;
+  transition:transform .35s cubic-bezier(.2,.8,.2,1), border-color .35s, box-shadow .35s;
+}
+.skill:hover{
+  transform:translateZ(24px) rotateX(6deg) rotateY(-6deg);
+  border-color:var(--cyan); box-shadow:0 18px 30px -14px rgba(94,234,212,.25);
+}
+.skill .k{font-weight:600; font-size:14.5px;}
+.skill .v{font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--mut); margin-top:4px;}
+
+/* experience timeline w/ depth */
+.timeline{display:flex; flex-direction:column; gap:4px;}
+.job{
+  display:grid; grid-template-columns:120px 1fr; gap:22px;
+  padding:26px 0; border-bottom:1px solid var(--line);
+  transform-style:preserve-3d; transition:transform .3s ease;
+}
+.job:hover{transform:translateZ(10px);}
+.job:last-child{border-bottom:none;}
+.job .when{font-family:'JetBrains Mono',monospace; color:var(--mut); font-size:12.5px; padding-top:3px;}
+.job h3{margin:0 0 4px; font-size:17px; font-weight:600;}
+.job .co{color:var(--cyan); font-size:13.5px; margin-bottom:10px;}
+.job ul{margin:0; padding-left:18px; color:var(--sub); font-size:14px; line-height:1.75;}
+.job ul li::marker{color:var(--mut);}
+
+/* projects — stacked 3D cards */
+.proj-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:18px; perspective:1000px;}
+.proj{
+  padding:22px; border-radius:16px; border:1px solid var(--line);
+  background:linear-gradient(150deg, var(--panel2), var(--panel));
+  transform-style:preserve-3d; transition:transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s;
+  position:relative; overflow:hidden;
+}
+.proj::before{
+  content:""; position:absolute; inset:-40% -20% auto auto; width:160px; height:160px;
+  background:radial-gradient(circle, var(--violet) 0%, transparent 70%); opacity:.15; pointer-events:none;
+}
+.proj:hover{transform:translateZ(20px) rotateX(4deg); box-shadow:0 24px 40px -18px rgba(167,139,250,.28);}
+.proj h3{margin:0 0 8px; font-size:16px;}
+.proj p{margin:0 0 14px; color:var(--sub); font-size:13.5px; line-height:1.65;}
+.tags{display:flex; flex-wrap:wrap; gap:6px;}
+.tag{font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--amber); border:1px solid #3a3221; background:rgba(251,191,104,.06); padding:3px 8px; border-radius:6px;}
+
+/* education */
+.edu{display:flex; justify-content:space-between; align-items:baseline; padding:16px 0; border-bottom:1px solid var(--line); gap:16px;}
+.edu:last-child{border-bottom:none;}
+.edu .deg{font-weight:600; font-size:15px;}
+.edu .sc{color:var(--sub); font-size:13.5px;}
+.edu .yr{font-family:'JetBrains Mono',monospace; color:var(--mut); font-size:12.5px; white-space:nowrap;}
+
+footer{padding:40px 24px 60px; text-align:center; color:var(--mut); font-size:12.5px; position:relative; z-index:1;}
+
+@media (max-width:640px){
+  .job{grid-template-columns:1fr;} .job .when{padding-top:0;}
+  .card3d{padding:30px 22px;}
+}
+@media (prefers-reduced-motion:reduce){
+  .card3d,.skill,.job,.proj{transition:none !important;}
+}
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+
+<div class="hero">
+  <div class="card3d" id="tiltCard">
+    <span class="eyebrow mono"><span class="dot"></span>available for work</span>
+    <h1 class="name">Intouch Neanmongkol</h1>
+    <p class="role">Full-Stack Software Developer</p>
+    <p class="tagline">สร้างระบบฝั่ง backend ที่เสถียรและ frontend ที่ลื่นไหล ถนัดออกแบบสถาปัตยกรรมที่ขยายง่าย และชอบลงลึกเรื่อง performance กับ developer experience</p>
+    <div class="contact-row mono">
+      <span class="pill"><b>sira.dev@email.com</b></span>
+      <span class="pill"><b>+66 8X-XXX-XXXX</b></span>
+      <span class="pill"><b>Bangkok, TH</b></span>
+      <span class="pill"><b>github.com/siradev</b></span>
+    </div>
+  </div>
+</div>
+
+<section>
+  <div class="wrap skills-stage">
+    <div class="section-head"><span class="idx mono">01</span><h2>Skills</h2><span class="rule"></span></div>
+    <div class="skill-grid">
+      <div class="skill"><div class="k">TypeScript / Node.js</div><div class="v">4+ yrs</div></div>
+      <div class="skill"><div class="k">React / Next.js</div><div class="v">4+ yrs</div></div>
+      <div class="skill"><div class="k">Python</div><div class="v">3 yrs</div></div>
+      <div class="skill"><div class="k">PostgreSQL</div><div class="v">database design</div></div>
+      <div class="skill"><div class="k">Docker / K8s</div><div class="v">deployment</div></div>
+      <div class="skill"><div class="k">AWS</div><div class="v">infra & CI/CD</div></div>
+      <div class="skill"><div class="k">GraphQL / REST</div><div class="v">API design</div></div>
+      <div class="skill"><div class="k">Redis</div><div class="v">caching layer</div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-head"><span class="idx mono">02</span><h2>Experience</h2><span class="rule"></span></div>
+    <div class="timeline">
+      <div class="job">
+        <div class="when">2023 — ปัจจุบัน</div>
+        <div>
+          <h3>Senior Software Engineer</h3>
+          <div class="co">Nimbus Technologies</div>
+          <ul>
+            <li>นำทีมออกแบบระบบ microservices รองรับ 2M+ requests/วัน</li>
+            <li>ลด latency เฉลี่ยของ API หลักลง 40% ด้วยการปรับ caching และ query</li>
+            <li>Mentoring วิศวกรจูเนียร์ 4 คน และวาง code review guideline ของทีม</li>
+          </ul>
+        </div>
+      </div>
+      <div class="job">
+        <div class="when">2021 — 2023</div>
+        <div>
+          <h3>Software Engineer</h3>
+          <div class="co">Bluefin Software</div>
+          <ul>
+            <li>พัฒนา dashboard แบบ real-time ด้วย React + WebSocket</li>
+            <li>สร้าง CI/CD pipeline ลดเวลา deploy จาก 1 ชม. เหลือ 8 นาที</li>
+          </ul>
+        </div>
+      </div>
+      <div class="job">
+        <div class="when">2020 — 2021</div>
+        <div>
+          <h3>Junior Developer</h3>
+          <div class="co">Orbit Labs</div>
+          <ul>
+            <li>พัฒนาและดูแล internal tools ด้วย Python/Django</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-head"><span class="idx mono">03</span><h2>Projects</h2><span class="rule"></span></div>
+    <div class="proj-grid">
+      <div class="proj">
+        <h3>Pulse — Analytics Platform</h3>
+        <p>ระบบวิเคราะห์ข้อมูลแบบ real-time สำหรับทีมการตลาด รองรับ event stream หลักล้านต่อวัน</p>
+        <div class="tags"><span class="tag">Next.js</span><span class="tag">Kafka</span><span class="tag">ClickHouse</span></div>
+      </div>
+      <div class="proj">
+        <h3>Ledger CLI</h3>
+        <p>เครื่องมือ command-line จัดการงบการเงินส่วนตัว มี plugin system ให้ community ต่อยอดได้</p>
+        <div class="tags"><span class="tag">Go</span><span class="tag">SQLite</span></div>
+      </div>
+      <div class="proj">
+        <h3>Signal Board</h3>
+        <p>Open-source kanban สำหรับทีมวิศวกรรม พร้อม API สำหรับเชื่อมต่อ integrations ภายนอก</p>
+        <div class="tags"><span class="tag">React</span><span class="tag">GraphQL</span><span class="tag">Postgres</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-head"><span class="idx mono">04</span><h2>Education</h2><span class="rule"></span></div>
+    <div class="edu">
+      <div><div class="deg">วิศวกรรมศาสตรบัณฑิต สาขาวิศวกรรมคอมพิวเตอร์</div><div class="sc">มหาวิทยาลัยเกษตรศาสตร์ วิทยาเขตศรีราชา</div></div>
+      <div class="yr mono">2016 — 2020</div>
+    </div>
+  </div>
+</section>
+
+<footer class="mono">แก้ไขเนื้อหาได้โดยตรงในไฟล์ HTML นี้ — เลื่อนเมาส์บนการ์ดด้านบนเพื่อดูเอฟเฟกต์ 3D</footer>
+
+<script>
+const card = document.getElementById('tiltCard');
+const heroArea = document.querySelector('.hero');
+heroArea.addEventListener('mousemove', (e) => {
+  const r = card.getBoundingClientRect();
+  const x = (e.clientX - r.left) / r.width - 0.5;
+  const y = (e.clientY - r.top) / r.height - 0.5;
+  card.style.transform = `rotateY(${x*8}deg) rotateX(${-y*8}deg) translateZ(0)`;
+});
+heroArea.addEventListener('mouseleave', () => {
+  card.style.transform = 'rotateY(0deg) rotateX(0deg)';
+});
+</script>
+</body>
+</html>
